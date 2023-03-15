@@ -10,6 +10,8 @@ namespace SimpleServer
         private static Socket Server;
         private static int Port;
 
+        private static readonly string htmlFilePath = @"D:\Projects\WebSockets\index.html";
+
         public static void Start(int _port)
         {
             Port = _port;
@@ -43,7 +45,7 @@ namespace SimpleServer
             }
             return result.ToString();
         }
-        private static void SocketWrite(Socket socket, string str)
+        private static void SocketWrite(Socket socket, string message)
         {
             ASCIIEncoding encoding = new ();
 
@@ -53,8 +55,7 @@ namespace SimpleServer
                 return;
             }
 
-            socket.Send(encoding.GetBytes(str));
-            socket.Send(encoding.GetBytes("\r\n"));
+            socket.Send(encoding.GetBytes($"{message}\r\n"));
         }
         private static void HandleClientSession(Socket socket)
         {
@@ -71,14 +72,10 @@ namespace SimpleServer
             } while (line != null && line.Length > 0);
 
             SocketWrite(socket, "HTTP/1.1 200 OK");
-            //SocketWrite(socket, "content-type: text/plain; charset=utf-8");
+            SocketWrite(socket, "content-type: text/html; charset=utf-8");
             SocketWrite(socket, "");
-            SocketWrite(socket, "");
-            SocketWrite(socket, "");
-            SocketWrite(socket, "");
-            SocketWrite(socket, "<h1>Hello!</h1>");
-            SocketWrite(socket, "");
-            SocketWrite(socket, "");
+            SocketWrite(socket, "Load check\r\n");
+            SocketWrite(socket, File.ReadAllText(htmlFilePath));
 
             socket.Close();
         }
