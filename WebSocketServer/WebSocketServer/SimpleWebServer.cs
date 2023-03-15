@@ -45,7 +45,13 @@ namespace SimpleServer
         }
         private static void SocketWrite(Socket socket, string str)
         {
-            ASCIIEncoding encoding = new ASCIIEncoding();
+            ASCIIEncoding encoding = new ();
+
+            if (!SocketConnected(socket))
+            {
+                socket.Shutdown(SocketShutdown.Both);
+                return;
+            }
 
             socket.Send(encoding.GetBytes(str));
             socket.Send(encoding.GetBytes("\r\n"));
@@ -75,6 +81,16 @@ namespace SimpleServer
             SocketWrite(socket, "");
 
             socket.Close();
+        }
+
+        private static bool SocketConnected(Socket s)
+        {
+            bool part1 = s.Poll(1000, SelectMode.SelectRead);
+            bool part2 = (s.Available == 0);
+            if (part1 && part2)
+                return false;
+            else
+                return true;
         }
     }
 }
