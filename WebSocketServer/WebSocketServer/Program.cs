@@ -17,8 +17,8 @@ namespace WebSocketTest
 
             _isRunning = true;
 
-            SelectServer();
-            //Start(2);
+            //SelectServer();
+            Start(2);
 
             while (_isRunning) { }
         }
