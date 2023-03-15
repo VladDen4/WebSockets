@@ -12,10 +12,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - name: List current folder
+      - uses: ls -la
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
+      - name: List current folder
+      - uses: ls -la
       - name: Install dependencies
         run: dotnet restore
       - name: Build
