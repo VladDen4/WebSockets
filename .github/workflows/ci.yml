@@ -19,6 +19,6 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build WebSocketServer --no-restore
+        run: dotnet build WebSocketServer/WebSocketServer.sln --no-restore
       - name: Test
         run: dotnet test --no-restore --verbosity normal
