@@ -7,7 +7,7 @@ namespace WebSocketTest
     class Program
     {
         private static int DefaultPort = 80;
-        private static bool _isRunning = false;
+        private static bool isRunning = false;
 
         private static void Main(string[] args)
         {
@@ -15,12 +15,18 @@ namespace WebSocketTest
 
             Writer.Log("Program started");
 
-            _isRunning = true;
+            isRunning = true;
 
-            //SelectServer();
-            Start(2);
+            if (int.TryParse(Environment.GetEnvironmentVariable("ServerToStart"), out int _result))
+            {
+                Start(_result);
+            }
+            else
+            {
+                SelectServer();
+            }
 
-            while (_isRunning) { }
+            while (isRunning) { }
         }
 
         private static void SelectServer()
