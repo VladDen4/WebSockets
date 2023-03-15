@@ -10,7 +10,7 @@ namespace SimpleServer
         private static Socket Server;
         private static int Port;
 
-        private static readonly string htmlFilePath = @"D:\Projects\WebSockets\index.html";
+        private static readonly string htmlFilePath = @"..\..\..\..\index.html";
 
         public static void Start(int _port)
         {
@@ -19,7 +19,7 @@ namespace SimpleServer
             Writer.Log("Starting SimpleWebServer server...");
 
             Server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
-            Server.Bind(new IPEndPoint(IPAddress.Loopback, Port));
+            Server.Bind(new IPEndPoint(IPAddress.Any, Port));
 
             Server.Listen(10);
             Writer.Log($"Server started on {Server.LocalEndPoint}", LogStatus.Success);
