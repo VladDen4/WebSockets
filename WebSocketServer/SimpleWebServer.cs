@@ -10,13 +10,16 @@ namespace SimpleServer
         private static Socket Server;
         private static int Port;
 
+        private static readonly string serverName = "SimpleWebServer";
         private static readonly string htmlFilePath = @"..\..\..\..\index.html";
 
         public static void Start(int _port)
         {
             Port = _port;
 
-            Writer.Log("Starting SimpleWebServer server...");
+            Writer.CreateLogFile(serverName);
+
+            Writer.Log($"Starting {serverName} server...");
 
             Server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.IP);
             Server.Bind(new IPEndPoint(IPAddress.Any, Port));
@@ -30,6 +33,7 @@ namespace SimpleServer
                 HandleClientSession(socket);
             }
         }
+
         private static string SocketRead(Socket socket)
         {
             StringBuilder result = new ();
@@ -43,6 +47,7 @@ namespace SimpleServer
                 if (ch != '\r')
                     result.Append(ch);
             }
+
             return result.ToString();
         }
         private static void SocketWrite(Socket socket, string message)
@@ -59,16 +64,16 @@ namespace SimpleServer
         }
         private static void HandleClientSession(Socket socket)
         {
-            Writer.Log($"Incoming connection from {socket.RemoteEndPoint}");
+            Writer.Log($"Incoming connection from {socket.RemoteEndPoint}", LogStatus.Info);
             string first = SocketRead(socket);
-            Writer.Log(first);
+            Writer.Log(first, LogStatus.Info);
 
             string line;
             do
             {
                 line = SocketRead(socket);
                 if (line != null)
-                    Writer.Log(line);
+                    Writer.Log(line, toFile: false);
             } while (line != null && line.Length > 0);
 
             SocketWrite(socket, "HTTP/1.1 200 OK");
