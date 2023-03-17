@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
+using System.Drawing;
 
 namespace SimpleServer
 {
@@ -12,6 +13,7 @@ namespace SimpleServer
 
         private static readonly string serverName = "SimpleWebServer";
         private static readonly string htmlFilePath = @"..\..\..\..\index.html";
+        private static readonly string jpgFilePath = @"..\..\..\..\cat.jpg";
 
         public static void Start(int _port)
         {
@@ -50,7 +52,8 @@ namespace SimpleServer
 
             return result.ToString();
         }
-        private static void SocketWrite(Socket socket, string message)
+
+        private static void SocketWrite(Socket socket, string message, Image img = null)
         {
             ASCIIEncoding encoding = new ();
 
@@ -60,8 +63,24 @@ namespace SimpleServer
                 return;
             }
 
+            if (img != null)
+            {
+                socket.Send(ImageToByteArray(img));
+                return;
+            }
+
             socket.Send(encoding.GetBytes($"{message}\r\n"));
         }
+
+        public static byte[] ImageToByteArray(Image imageIn)
+        {
+            using (var ms = new MemoryStream())
+            {
+                imageIn.Save(ms, imageIn.RawFormat);
+                return ms.ToArray();
+            }
+        }
+
         private static void HandleClientSession(Socket socket)
         {
             Writer.Log($"Incoming connection from {socket.RemoteEndPoint}", LogStatus.Info);
@@ -77,10 +96,11 @@ namespace SimpleServer
             } while (line != null && line.Length > 0);
 
             SocketWrite(socket, "HTTP/1.1 200 OK");
-            SocketWrite(socket, "content-type: text/html; charset=utf-8");
+            SocketWrite(socket, "content-type: image/jpg");
             SocketWrite(socket, "");
-            SocketWrite(socket, "Load check\r\n");
-            SocketWrite(socket, File.ReadAllText(htmlFilePath));
+            //SocketWrite(socket, "Load check\r\n");
+            SocketWrite(socket, "123", Image.FromFile(jpgFilePath));
+            //SocketWrite(socket, File.ReadAllText(htmlFilePath));
 
             socket.Close();
         }
