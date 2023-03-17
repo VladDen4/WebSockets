@@ -20,7 +20,7 @@ namespace WebServer
 
             Writer.Log("Starting WebServer server...");
 
-            IPEndPoint localEndPoint = new (IPAddress.Loopback, Port);
+            IPEndPoint localEndPoint = new (IPAddress.Any, Port);
 
             socket = new (AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -53,15 +53,46 @@ namespace WebServer
 
             Writer.Log($"{bytesTransferred} | {stringTransferred}");
 
-            byte[] sendBuffer = encoding.GetBytes("HTTP/1.0 OK\r\n");
+            //byte[] sendBuffer = encoding.GetBytes("HTTP/1.0 200 OK\r\n");
             //_client.BeginSend(sendBuffer, 0, sendBuffer.Length, SocketFlags.None, new AsyncCallback(SendCallback), _client);
-            _client.Send(encoding.GetBytes("HTTP/1.0 OK\r\n"));
+            //_client.Send(encoding.GetBytes("HTTP/1.0 200 OK\r\n"));
+            //_client.Send(encoding.GetBytes("content-type: text/html; charset=utf-8"));
+            //_client.Send(encoding.GetBytes(""));
+            //_client.Send(encoding.GetBytes("What's up man"));
+
+            SendMessage(socket, "HTTP/1.0 200 OK");
+            SendMessage(socket, "content-type: text/html; charset=utf-8");
+            SendMessage(socket, "");
+            SendMessage(socket, "What's up man");
         }
 
         private static void SendCallback(IAsyncResult _result)
         {
             Socket _client = (Socket)_result.AsyncState;
             //_client.Shutdown(SocketShutdown.Send);
+        }
+
+        private static void SendMessage(Socket _socket, string _message)
+        {
+            ASCIIEncoding encoding = new();
+
+            if (!SocketConnected(socket))
+            {
+                socket.Shutdown(SocketShutdown.Both);
+                return;
+            }
+
+            socket.Send(encoding.GetBytes($"{_message}\r\n"));
+        }
+
+        private static bool SocketConnected(Socket s)
+        {
+            bool part1 = s.Poll(1000, SelectMode.SelectRead);
+            bool part2 = (s.Available == 0);
+            if (part1 && part2)
+                return false;
+            else
+                return true;
         }
     }
 }
