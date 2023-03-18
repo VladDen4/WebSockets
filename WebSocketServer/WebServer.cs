@@ -17,11 +17,15 @@ namespace WebServer
         private static int bytesTransferred;
         private static Encoding encoding = Encoding.ASCII;
 
+        private static readonly string serverName = "WebServer";
+
         public static void Start(int _port)
         {
             Port = _port;
 
-            Writer.Log("Starting WebServer server...");
+            Writer.CreateLogFile(serverName);
+
+            Writer.Log($"Starting {serverName} server...");
 
             IPEndPoint localEndPoint = new (IPAddress.Any, Port);
 
