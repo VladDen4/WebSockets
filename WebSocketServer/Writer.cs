@@ -5,12 +5,18 @@ using System.Collections;
 
 namespace ColoredConsole
 {
+    /// <summary>
+    /// Console with colors for 'professional' style.
+    /// </summary>
     class Writer
     {
         private static readonly Queue msgQueue = new ();
         private static bool isProcessing = false;
         private static string logPath = @".\logs\";
 
+        /// <summary>
+        /// Message obejct.
+        /// </summary>
         private class Message
         {
             public readonly string text;
@@ -29,6 +35,10 @@ namespace ColoredConsole
             }
         }
 
+        /// <summary>
+        /// Create path and file name.
+        /// </summary>
+        /// <param name="_serverName">Log folder name.</param>
         public static void CreateLogFile(string _serverName)
         {
             logPath += $@"{_serverName}\";
@@ -42,6 +52,14 @@ namespace ColoredConsole
                 using (var logFile = File.Create(logPath)) {}
         }
 
+        /// <summary>
+        /// Creates a new log in the console.
+        /// </summary>
+        /// <param name="_text">Text to display.</param>
+        /// <param name="_color">Text color. See colors in <see cref="LogStatus"/>.</param>
+        /// <param name="_newline">Is a newline needed?</param>
+        /// <param name="_timestamp">Is a timestamp needed?</param>
+        /// <param name="_toFile">Do you need to write to a file?</param>
         public static void Log(string _text, LogStatus _color = LogStatus.Comment, bool _newline = true, bool _timestamp = true, bool _toFile = true)
         {
             Message _msg = new (_text, _color, _newline, _timestamp, _toFile);
@@ -50,6 +68,9 @@ namespace ColoredConsole
             Write();
         }
 
+        /// <summary>
+        /// The main method for writing logs to the console and to a file.
+        /// </summary>
         private static void Write()
         {
             if (isProcessing) return;
