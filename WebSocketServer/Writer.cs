@@ -42,9 +42,9 @@ namespace ColoredConsole
                 using (var logFile = File.Create(logPath)) {}
         }
 
-        public static void Log(string _text, LogStatus _color = LogStatus.Comment, bool _newline = true, bool _timestamp = true, bool toFile = true)
+        public static void Log(string _text, LogStatus _color = LogStatus.Comment, bool _newline = true, bool _timestamp = true, bool _toFile = true)
         {
-            Message _msg = new (_text, _color, _newline, _timestamp, toFile);
+            Message _msg = new (_text, _color, _newline, _timestamp, _toFile);
             msgQueue.Enqueue(_msg);
 
             Write();

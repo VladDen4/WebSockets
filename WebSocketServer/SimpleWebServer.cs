@@ -95,7 +95,7 @@ namespace SimpleServer
             {
                 line = SocketRead(socket);
                 if (line != null)
-                    Writer.Log(line, toFile: false);
+                    Writer.Log(line, _toFile: false);
             } while (line != null && line.Length > 0);
 
             SocketWrite(socket, "HTTP/1.1 200 OK");
