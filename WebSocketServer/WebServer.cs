@@ -1,4 +1,7 @@
-﻿using ColoredConsole;
+﻿// Copyright (c) Vlad_Den <vladden500@gmail.com>. Licensed under the MIT Licence.
+// See the LICENCE file in the repository root for full licence text.
+
+using ColoredConsole;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
