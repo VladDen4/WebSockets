@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Drawing;
+using WebSocketServer;
 
 namespace SimpleServer
 {
@@ -60,7 +61,7 @@ namespace SimpleServer
         {
             ASCIIEncoding encoding = new ();
 
-            if (!SocketConnected(socket))
+            if (!socket.IsConnected())
             {
                 socket.Shutdown(SocketShutdown.Both);
                 return;
@@ -106,16 +107,6 @@ namespace SimpleServer
             //SocketWrite(socket, File.ReadAllText(htmlFilePath));
 
             socket.Close();
-        }
-
-        private static bool SocketConnected(Socket s)
-        {
-            bool part1 = s.Poll(1000, SelectMode.SelectRead);
-            bool part2 = (s.Available == 0);
-            if (part1 && part2)
-                return false;
-            else
-                return true;
         }
     }
 }
